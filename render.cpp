@@ -1,6 +1,8 @@
 #include "head.hpp"
 #include <cstring>
 
+#include <chrono>
+
 #define PI 3.14159265358979323846
 
 const Vec3d BACKGROUND_COLOR(80/255.0, 125/255.0, 42/255.0);
@@ -82,6 +84,7 @@ void render(const std::vector<Figure*>& Figures, Parametrs& param) {
     double gx = d*tan(fov/2.);
     double gy = gx*(static_cast<double>(m)/static_cast<double>(k));
 
+    auto start_for = std::chrono::steady_clock::now();
     #pragma omp parallel for
     for(size_t j = 0; j < param.height; ++j) {
         for(size_t i = 0; i < param.width; ++i) {
@@ -97,6 +100,9 @@ void render(const std::vector<Figure*>& Figures, Parametrs& param) {
             canvas[j][i] = cast_ray(ray, Figures, param.light);
         }
     }
+    auto end_for = std::chrono::steady_clock::now();
+
+    std::cout << "time: " << std::chrono::duration<double, std::milli>(end_for - start_for).count() << " ms" << "\n";
 
     //std::ofstream ofs;
     //ofs.open("./out.ppm");
