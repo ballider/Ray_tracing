@@ -125,5 +125,9 @@ bool FiguresFromFile(const std::string& FileName, std::vector<Figure*>& Figures)
     }
     inp.close();
 
+    for(auto& fd: Factory) {
+        delete fd.second;
+    }
+
     return 1;
 }
